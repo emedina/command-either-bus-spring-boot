@@ -39,7 +39,7 @@ public final class Registry {
     private void register(final ApplicationContext applicationContext, final String name) {
         Class<CommandHandler<?>> handlerClass = (Class<CommandHandler<?>>) applicationContext.getType(name);
         Class<?>[] generics = GenericTypeResolver.resolveTypeArguments(handlerClass, CommandHandler.class);
-        Class<? extends Command> commandType = (Class<? extends Command>) generics[1];
+        Class<? extends Command> commandType = (Class<? extends Command>) generics[0];
 
         this.providerMap.put(commandType, new CommandProvider(applicationContext, handlerClass));
     }
