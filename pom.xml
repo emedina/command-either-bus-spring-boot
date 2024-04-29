@@ -7,30 +7,30 @@
     <parent>
         <groupId>org.epo.common.maven.poms</groupId>
         <artifactId>epo-corporate-pom</artifactId>
-        <version>5.0.29</version>
+        <version>6.0.10</version>
     </parent>
 
     <groupId>org.epo.cne.command</groupId>
     <artifactId>command-either-bus-spring-boot</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.5</version>
     <packaging>jar</packaging>
 
     <name>CLOUD-NATIVE-ENGINEERING - Command Either Bus with Spring</name>
     <description>A Command Either bus implementation that uses Spring's Bean registry to execute commands</description>
 
     <properties>
-        <java.version>17</java.version>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <java.version>21</java.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <spring-framework-bom.version>6.0.6</spring-framework-bom.version>
+        <spring-framework-bom.version>6.1.5</spring-framework-bom.version>
 
         <shared-kernel-command-either-bus.version>1.0.1</shared-kernel-command-either-bus.version>
 
         <versions-maven-plugin.version>2.15.0</versions-maven-plugin.version>
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-        <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
     </properties>
 
     <dependencyManagement>
