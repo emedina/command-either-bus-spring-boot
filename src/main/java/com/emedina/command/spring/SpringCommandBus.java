@@ -1,15 +1,15 @@
-package org.epo.cne.command.spring;
+package com.emedina.command.spring;
 
 import io.vavr.control.Either;
-import org.epo.cne.sharedkernel.command.Command;
-import org.epo.cne.sharedkernel.command.core.CommandBus;
-import org.epo.cne.sharedkernel.command.core.CommandHandler;
+import com.emedina.sharedkernel.command.Command;
+import com.emedina.sharedkernel.command.core.CommandBus;
+import com.emedina.sharedkernel.command.core.CommandHandler;
 import org.springframework.context.annotation.Bean;
 
 /**
  * Implementation of a command bus backed by Spring's registry.
  *
- * @author Enrique Medina Montenegro (em54029)
+ * @author Enrique Medina Montenegro
  */
 public class SpringCommandBus implements CommandBus {
 

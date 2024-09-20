@@ -1,7 +1,7 @@
-package org.epo.cne.command.spring;
+package com.emedina.command.spring;
 
-import org.epo.cne.sharedkernel.command.Command;
-import org.epo.cne.sharedkernel.command.core.CommandHandler;
+import com.emedina.sharedkernel.command.Command;
+import com.emedina.sharedkernel.command.core.CommandHandler;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.GenericTypeResolver;
 
@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * A registry that holds the mapping between a command and its handler using Spring's {@link ApplicationContext}.
  *
- * @author Enrique Medina Montenegro (em54029)
+ * @author Enrique Medina Montenegro
  * @see CommandHandler
  */
 public final class Registry {

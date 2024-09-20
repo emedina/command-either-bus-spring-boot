@@ -1,13 +1,13 @@
-package org.epo.cne.command.spring;
+package com.emedina.command.spring;
 
-import org.epo.cne.sharedkernel.command.core.CommandHandler;
+import com.emedina.sharedkernel.command.core.CommandHandler;
 import org.springframework.context.ApplicationContext;
 
 /**
  * Creates a command handler that makes use of Spring's dependency injection capabilities.
  *
  * @param <H> type of the command handler
- * @author Enrique Medina Montenegro (em54029)
+ * @author Enrique Medina Montenegro
  */
 @SuppressWarnings("unchecked")
 class CommandProvider<H extends CommandHandler<?>> {
