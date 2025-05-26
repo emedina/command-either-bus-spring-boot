@@ -1,5 +1,9 @@
 # 🚌 Spring Command Either Bus
 
+![License](https://img.shields.io/badge/License-MIT-blue.svg)
+![Java Version](https://img.shields.io/badge/Java-24-blue)
+![Test Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)
+
 A lightweight command bus implementation for Spring Boot applications that enables centralized command handling using Spring's dependency injection capabilities and functional programming with Either types.
 
 ## 📚 Further Learning
