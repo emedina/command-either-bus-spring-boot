@@ -13,13 +13,14 @@ import org.springframework.context.ApplicationContext;
 
 import com.emedina.command.spring.fixtures.AnotherTestCommand;
 import com.emedina.command.spring.fixtures.AnotherTestCommandHandler;
+import com.emedina.command.spring.fixtures.RawTypeCommandHandler;
 import com.emedina.command.spring.fixtures.TestCommand;
 import com.emedina.command.spring.fixtures.TestCommandHandler;
 import com.emedina.sharedkernel.command.core.CommandHandler;
 
 /**
  * Unit tests for Registry.
- * 
+ *
  * @author Enrique Medina Montenegro
  */
 @ExtendWith(MockitoExtension.class)
@@ -29,73 +30,156 @@ class RegistryTest {
     @Mock
     private ApplicationContext applicationContext;
 
+    private Registry registry;
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void setupWithHandlers() {
+        when(applicationContext.getBeanNamesForType(CommandHandler.class))
+            .thenReturn(new String[] { "testCommandHandler", "anotherTestCommandHandler" });
+
+        when(applicationContext.getType("testCommandHandler"))
+            .thenReturn((Class) TestCommandHandler.class);
+        when(applicationContext.getType("anotherTestCommandHandler"))
+            .thenReturn((Class) AnotherTestCommandHandler.class);
+
+        when(applicationContext.getBean(TestCommandHandler.class))
+            .thenReturn(new TestCommandHandler());
+        when(applicationContext.getBean(AnotherTestCommandHandler.class))
+            .thenReturn(new AnotherTestCommandHandler());
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void setupWithTestHandlerOnly() {
+        when(applicationContext.getBeanNamesForType(CommandHandler.class))
+            .thenReturn(new String[] { "testCommandHandler" });
+
+        when(applicationContext.getType("testCommandHandler"))
+            .thenReturn((Class) TestCommandHandler.class);
+
+        when(applicationContext.getBean(TestCommandHandler.class))
+            .thenReturn(new TestCommandHandler());
+    }
+
+    private void setupWithoutHandlers() {
+        when(applicationContext.getBeanNamesForType(CommandHandler.class))
+            .thenReturn(new String[] {});
+    }
+
     @Test
-    @DisplayName("should register and retrieve command handlers correctly")
-    void shouldRegisterAndRetrieveCommandHandlersCorrectly() {
+    @DisplayName("should register command handlers during construction")
+    void shouldRegisterCommandHandlersDuringConstruction() {
         // given
-        String[] handlerNames = { "testCommandHandler", "anotherTestCommandHandler" };
-        when(applicationContext.getBeanNamesForType(CommandHandler.class)).thenReturn(handlerNames);
-        when(applicationContext.getType("testCommandHandler")).thenReturn((Class) TestCommandHandler.class);
-        when(applicationContext.getType("anotherTestCommandHandler")).thenReturn(
-            (Class) AnotherTestCommandHandler.class);
-        when(applicationContext.getBean(TestCommandHandler.class)).thenReturn(new TestCommandHandler());
-        when(applicationContext.getBean(AnotherTestCommandHandler.class)).thenReturn(new AnotherTestCommandHandler());
+        setupWithHandlers();
 
         // when
-        Registry registry = new Registry(applicationContext);
+        registry = new Registry(applicationContext);
 
         // then
         CommandHandler<TestCommand> testHandler = registry.get(TestCommand.class);
         CommandHandler<AnotherTestCommand> anotherHandler = registry.get(AnotherTestCommand.class);
 
+        assertThat(testHandler).isNotNull();
+        assertThat(testHandler).isInstanceOf(TestCommandHandler.class);
+        assertThat(anotherHandler).isNotNull();
+        assertThat(anotherHandler).isInstanceOf(AnotherTestCommandHandler.class);
+    }
+
+    @Test
+    @DisplayName("should return correct handler for command type")
+    void shouldReturnCorrectHandlerForCommandType() {
+        // given
+        setupWithTestHandlerOnly();
+        registry = new Registry(applicationContext);
+
+        // when
+        CommandHandler<TestCommand> handler = registry.get(TestCommand.class);
+
+        // then
+        assertThat(handler).isInstanceOf(TestCommandHandler.class);
+
+        TestCommand command = new TestCommand("test");
+        handler.handle(command);
+
+        TestCommandHandler testHandler = (TestCommandHandler) handler;
+        assertThat(testHandler.wasExecuted()).isTrue();
+        assertThat(testHandler.getLastCommand()).isEqualTo(command);
+    }
+
+    @Test
+    @DisplayName("should handle multiple command types")
+    void shouldHandleMultipleCommandTypes() {
+        // given
+        setupWithHandlers();
+        registry = new Registry(applicationContext);
+
+        // when
+        CommandHandler<TestCommand> testHandler = registry.get(TestCommand.class);
+        CommandHandler<AnotherTestCommand> anotherHandler = registry.get(AnotherTestCommand.class);
+
+        // then
         assertThat(testHandler).isInstanceOf(TestCommandHandler.class);
         assertThat(anotherHandler).isInstanceOf(AnotherTestCommandHandler.class);
+        assertThat(testHandler).isNotSameAs(anotherHandler);
+    }
+
+    @Test
+    @DisplayName("should return null when no handler registered for command type")
+    void shouldReturnNullWhenNoHandlerRegisteredForCommandType() {
+        // given
+        setupWithoutHandlers();
+        registry = new Registry(applicationContext);
+
+        // when & then
+        assertThatThrownBy(() -> registry.get(TestCommand.class))
+            .isInstanceOf(NullPointerException.class);
     }
 
     @Test
     @DisplayName("should handle empty application context")
     void shouldHandleEmptyApplicationContext() {
         // given
-        String[] emptyHandlerNames = {};
-        when(applicationContext.getBeanNamesForType(CommandHandler.class)).thenReturn(emptyHandlerNames);
+        setupWithoutHandlers();
 
         // when
-        Registry registry = new Registry(applicationContext);
+        registry = new Registry(applicationContext);
 
         // then
         assertThatThrownBy(() -> registry.get(TestCommand.class))
             .isInstanceOf(NullPointerException.class);
-    }
-
-    @Test
-    @DisplayName("should register single command handler")
-    void shouldRegisterSingleCommandHandler() {
-        // given
-        String[] handlerNames = { "testCommandHandler" };
-        when(applicationContext.getBeanNamesForType(CommandHandler.class)).thenReturn(handlerNames);
-        when(applicationContext.getType("testCommandHandler")).thenReturn((Class) TestCommandHandler.class);
-        when(applicationContext.getBean(TestCommandHandler.class)).thenReturn(new TestCommandHandler());
-
-        // when
-        Registry registry = new Registry(applicationContext);
-
-        // then
-        CommandHandler<TestCommand> handler = registry.get(TestCommand.class);
-        assertThat(handler).isInstanceOf(TestCommandHandler.class);
-    }
-
-    @Test
-    @DisplayName("should throw exception when handler not found")
-    void shouldThrowExceptionWhenHandlerNotFound() {
-        // given
-        String[] emptyHandlerNames = {};
-        when(applicationContext.getBeanNamesForType(CommandHandler.class)).thenReturn(emptyHandlerNames);
-
-        // when
-        Registry registry = new Registry(applicationContext);
-
-        // then
-        assertThatThrownBy(() -> registry.get(TestCommand.class))
+        assertThatThrownBy(() -> registry.get(AnotherTestCommand.class))
             .isInstanceOf(NullPointerException.class);
     }
+
+    @Test
+    @DisplayName("should throw IllegalStateException when handler has no generic type information")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    void shouldThrowIllegalStateExceptionWhenHandlerHasNoGenericTypeInformation() {
+        // given
+        when(applicationContext.getBeanNamesForType(CommandHandler.class))
+            .thenReturn(new String[] { "rawTypeCommandHandler" });
+        when(applicationContext.getType("rawTypeCommandHandler"))
+            .thenReturn((Class) RawTypeCommandHandler.class);
+
+        // when & then
+        assertThatThrownBy(() -> new Registry(applicationContext))
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessageContaining("Could not resolve command type for handler: rawTypeCommandHandler");
+    }
+
+    @Test
+    @DisplayName("should throw IllegalStateException when generic type resolution returns null")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    void shouldThrowIllegalStateExceptionWhenGenericTypeResolutionReturnsNull() {
+        // given
+        when(applicationContext.getBeanNamesForType(CommandHandler.class))
+            .thenReturn(new String[] { "rawTypeCommandHandler" });
+        when(applicationContext.getType("rawTypeCommandHandler"))
+            .thenReturn((Class) RawTypeCommandHandler.class);
+
+        // when & then
+        assertThatThrownBy(() -> new Registry(applicationContext))
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("Could not resolve command type for handler: rawTypeCommandHandler");
+    }
+
 }

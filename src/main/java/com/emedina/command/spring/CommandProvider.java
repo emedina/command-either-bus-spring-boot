@@ -1,7 +1,8 @@
 package com.emedina.command.spring;
 
-import com.emedina.sharedkernel.command.core.CommandHandler;
 import org.springframework.context.ApplicationContext;
+
+import com.emedina.sharedkernel.command.core.CommandHandler;
 
 /**
  * Creates a command handler that makes use of Spring's dependency injection capabilities.
@@ -9,7 +10,6 @@ import org.springframework.context.ApplicationContext;
  * @param <H> type of the command handler
  * @author Enrique Medina Montenegro
  */
-@SuppressWarnings("unchecked")
 class CommandProvider<H extends CommandHandler<?>> {
 
     private final ApplicationContext applicationContext;

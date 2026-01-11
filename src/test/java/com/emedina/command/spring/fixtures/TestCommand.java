@@ -38,4 +38,5 @@ public class TestCommand implements Command {
     public String toString() {
         return "TestCommand{message='" + message + "'}";
     }
+
 }

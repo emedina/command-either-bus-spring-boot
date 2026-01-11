@@ -19,7 +19,7 @@ import io.vavr.control.Either;
 
 /**
  * Unit tests for SpringCommandBus.
- * 
+ *
  * @author Enrique Medina Montenegro
  */
 @ExtendWith(MockitoExtension.class)
@@ -33,7 +33,6 @@ class SpringCommandBusTest {
 
     @BeforeEach
     void setUp() {
-        // given
         commandBus = new SpringCommandBus(registry);
     }
 
@@ -50,9 +49,9 @@ class SpringCommandBusTest {
 
         // then
         verify(registry).get(TestCommand.class);
-        assertThat(result.isRight()).isTrue();
         assertThat(handler.wasExecuted()).isTrue();
         assertThat(handler.getLastCommand()).isEqualTo(command);
+        assertThat(result.isRight()).isTrue();
     }
 
     @Test
@@ -94,8 +93,8 @@ class SpringCommandBusTest {
     }
 
     @Test
-    @DisplayName("should return Either.right when command execution succeeds")
-    void shouldReturnEitherRightWhenCommandExecutionSucceeds() {
+    @DisplayName("should return Either from handler")
+    void shouldReturnEitherFromHandler() {
         // given
         TestCommand command = new TestCommand("test message");
         TestCommandHandler handler = new TestCommandHandler();
@@ -105,7 +104,8 @@ class SpringCommandBusTest {
         Either<?, Void> result = commandBus.execute(command);
 
         // then
+        assertThat(result).isNotNull();
         assertThat(result.isRight()).isTrue();
-        assertThat(result.get()).isNull();
     }
+
 }

@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public final class Registry {
 
-    private Map<Class<? extends Command>, CommandProvider> providerMap = new HashMap<>();
+    private final Map<Class<? extends Command>, CommandProvider<?>> providerMap = new HashMap<>();
 
     /**
      * Constructor-based dependency injection.
@@ -36,17 +36,23 @@ public final class Registry {
      * @param applicationContext Spring's application context
      * @param name               of the bean as a command handler
      */
+    @SuppressWarnings("unchecked")
     private void register(final ApplicationContext applicationContext, final String name) {
         Class<CommandHandler<?>> handlerClass = (Class<CommandHandler<?>>) applicationContext.getType(name);
         Class<?>[] generics = GenericTypeResolver.resolveTypeArguments(handlerClass, CommandHandler.class);
-        Class<? extends Command> commandType = (Class<? extends Command>) generics[0];
 
-        this.providerMap.put(commandType, new CommandProvider(applicationContext, handlerClass));
+        if (generics == null || generics.length == 0) {
+            throw new IllegalStateException("Could not resolve command type for handler: " + name);
+        }
+
+        Class<? extends Command> commandType = (Class<? extends Command>) generics[0];
+        this.providerMap.put(commandType, new CommandProvider<>(applicationContext, handlerClass));
     }
 
     @SuppressWarnings("unchecked")
     <C extends Command> CommandHandler<C> get(final Class<C> commandClass) {
-        return this.providerMap.get(commandClass).get();
+        CommandProvider<?> provider = this.providerMap.get(commandClass);
+        return (CommandHandler<C>) provider.get();
     }
 
 }

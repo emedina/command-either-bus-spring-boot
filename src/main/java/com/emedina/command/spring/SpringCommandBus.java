@@ -1,10 +1,12 @@
 package com.emedina.command.spring;
 
-import io.vavr.control.Either;
+import org.springframework.context.annotation.Bean;
+
 import com.emedina.sharedkernel.command.Command;
 import com.emedina.sharedkernel.command.core.CommandBus;
 import com.emedina.sharedkernel.command.core.CommandHandler;
-import org.springframework.context.annotation.Bean;
+
+import io.vavr.control.Either;
 
 /**
  * Implementation of a command bus backed by Spring's registry.
@@ -28,11 +30,14 @@ public class SpringCommandBus implements CommandBus {
      * Delegates the handling of the command to the corresponding {@link Bean} from Spring.
      *
      * @param command the command object
+     * @param <C>     the type of the command
      * @return the result of the command's execution
      */
     @Override
+    @SuppressWarnings("unchecked")
     public <C extends Command> Either<?, Void> execute(final C command) {
-        CommandHandler<C> commandHandler = (CommandHandler<C>) this.registry.get(command.getClass());
+        Class<C> commandClass = (Class<C>) command.getClass();
+        CommandHandler<C> commandHandler = this.registry.get(commandClass);
         return commandHandler.handle(command);
     }
 

@@ -123,4 +123,5 @@ class SpringCommandBusIntegrationTest {
             assertThat(handler1.wasExecuted()).isTrue();
         }
     }
+
 }

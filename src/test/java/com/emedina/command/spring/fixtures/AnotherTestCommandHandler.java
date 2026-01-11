@@ -1,12 +1,11 @@
 package com.emedina.command.spring.fixtures;
 
 import com.emedina.sharedkernel.command.core.CommandHandler;
-
 import io.vavr.control.Either;
 
 /**
- * Another test command handler fixture for testing the command bus.
- * 
+ * Another test command handler fixture for testing multiple command types.
+ *
  * @author Enrique Medina Montenegro
  */
 public class AnotherTestCommandHandler implements CommandHandler<AnotherTestCommand> {
