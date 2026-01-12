@@ -38,21 +38,21 @@ public final class Registry {
      */
     @SuppressWarnings("unchecked")
     private void register(final ApplicationContext applicationContext, final String name) {
-        Class<CommandHandler<?>> handlerClass = (Class<CommandHandler<?>>) applicationContext.getType(name);
+        Class<CommandHandler<?, ?>> handlerClass = (Class<CommandHandler<?, ?>>) applicationContext.getType(name);
         Class<?>[] generics = GenericTypeResolver.resolveTypeArguments(handlerClass, CommandHandler.class);
 
-        if (generics == null || generics.length == 0) {
+        if (generics == null || generics.length < 2) {
             throw new IllegalStateException("Could not resolve command type for handler: " + name);
         }
 
-        Class<? extends Command> commandType = (Class<? extends Command>) generics[0];
+        Class<? extends Command> commandType = (Class<? extends Command>) generics[1];
         this.providerMap.put(commandType, new CommandProvider<>(applicationContext, handlerClass));
     }
 
     @SuppressWarnings("unchecked")
-    <C extends Command> CommandHandler<C> get(final Class<C> commandClass) {
+    <E, C extends Command> CommandHandler<E, C> get(final Class<C> commandClass) {
         CommandProvider<?> provider = this.providerMap.get(commandClass);
-        return (CommandHandler<C>) provider.get();
+        return (CommandHandler<E, C>) provider.get();
     }
 
 }

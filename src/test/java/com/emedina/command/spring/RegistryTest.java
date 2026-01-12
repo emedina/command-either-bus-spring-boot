@@ -75,8 +75,8 @@ class RegistryTest {
         registry = new Registry(applicationContext);
 
         // then
-        CommandHandler<TestCommand> testHandler = registry.get(TestCommand.class);
-        CommandHandler<AnotherTestCommand> anotherHandler = registry.get(AnotherTestCommand.class);
+        CommandHandler<Throwable, TestCommand> testHandler = registry.get(TestCommand.class);
+        CommandHandler<Throwable, AnotherTestCommand> anotherHandler = registry.get(AnotherTestCommand.class);
 
         assertThat(testHandler).isNotNull();
         assertThat(testHandler).isInstanceOf(TestCommandHandler.class);
@@ -92,7 +92,7 @@ class RegistryTest {
         registry = new Registry(applicationContext);
 
         // when
-        CommandHandler<TestCommand> handler = registry.get(TestCommand.class);
+        CommandHandler<Throwable, TestCommand> handler = registry.get(TestCommand.class);
 
         // then
         assertThat(handler).isInstanceOf(TestCommandHandler.class);
@@ -113,8 +113,8 @@ class RegistryTest {
         registry = new Registry(applicationContext);
 
         // when
-        CommandHandler<TestCommand> testHandler = registry.get(TestCommand.class);
-        CommandHandler<AnotherTestCommand> anotherHandler = registry.get(AnotherTestCommand.class);
+        CommandHandler<Throwable, TestCommand> testHandler = registry.get(TestCommand.class);
+        CommandHandler<Throwable, AnotherTestCommand> anotherHandler = registry.get(AnotherTestCommand.class);
 
         // then
         assertThat(testHandler).isInstanceOf(TestCommandHandler.class);

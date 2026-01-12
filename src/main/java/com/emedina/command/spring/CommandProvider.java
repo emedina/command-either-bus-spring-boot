@@ -10,7 +10,7 @@ import com.emedina.sharedkernel.command.core.CommandHandler;
  * @param <H> type of the command handler
  * @author Enrique Medina Montenegro
  */
-class CommandProvider<H extends CommandHandler<?>> {
+class CommandProvider<H extends CommandHandler<?, ?>> {
 
     private final ApplicationContext applicationContext;
     private final Class<H> type;

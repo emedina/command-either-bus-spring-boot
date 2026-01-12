@@ -8,13 +8,13 @@ import io.vavr.control.Either;
  *
  * @author Enrique Medina Montenegro
  */
-public class AnotherTestCommandHandler implements CommandHandler<AnotherTestCommand> {
+public class AnotherTestCommandHandler implements CommandHandler<Throwable, AnotherTestCommand> {
 
     private boolean wasExecuted = false;
     private AnotherTestCommand lastCommand;
 
     @Override
-    public Either<?, Void> handle(AnotherTestCommand command) {
+    public Either<Throwable, Void> handle(AnotherTestCommand command) {
         this.wasExecuted = true;
         this.lastCommand = command;
         return Either.right(null);

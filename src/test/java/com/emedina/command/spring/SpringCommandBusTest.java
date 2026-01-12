@@ -42,7 +42,7 @@ class SpringCommandBusTest {
         // given
         TestCommand command = new TestCommand("test message");
         TestCommandHandler handler = new TestCommandHandler();
-        when(registry.get(TestCommand.class)).thenReturn(handler);
+        when(registry.<Throwable, TestCommand>get(TestCommand.class)).thenReturn(handler);
 
         // when
         Either<?, Void> result = commandBus.execute(command);
@@ -60,7 +60,7 @@ class SpringCommandBusTest {
         // given
         TestCommand command = new TestCommand("test message");
         TestCommandHandler handler = new TestCommandHandler();
-        when(registry.get(TestCommand.class)).thenReturn(handler);
+        when(registry.<Throwable, TestCommand>get(TestCommand.class)).thenReturn(handler);
 
         // when
         commandBus.execute(command);
@@ -98,7 +98,7 @@ class SpringCommandBusTest {
         // given
         TestCommand command = new TestCommand("test message");
         TestCommandHandler handler = new TestCommandHandler();
-        when(registry.get(TestCommand.class)).thenReturn(handler);
+        when(registry.<Throwable, TestCommand>get(TestCommand.class)).thenReturn(handler);
 
         // when
         Either<?, Void> result = commandBus.execute(command);
