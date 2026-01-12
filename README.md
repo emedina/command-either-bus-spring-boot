@@ -1,7 +1,7 @@
 # 🚌 Spring Command Either Bus
 
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
-![Java Version](https://img.shields.io/badge/Java-24-blue)
+![Java Version](https://img.shields.io/badge/Java-25-blue)
 ![Test Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)
 
 A lightweight command bus implementation for Spring Boot applications that enables centralized command handling using Spring's dependency injection capabilities and functional programming with Either types.
@@ -222,18 +222,18 @@ View the coverage report at `target/site/jacoco/index.html`
 
 | Dependency | Version | Purpose |
 |------------|---------|---------|
-| **Spring Framework** | 6.2.1 | Core Spring integration |
-| **Java** | 24 | Runtime platform |
-| **Vavr** | 0.10.6 | Functional programming with Either |
+| **Spring Framework** | 7.0.2 | Core Spring integration |
+| **Java** | 25 | Runtime platform |
+| **Vavr** | 0.11.0 | Functional programming with Either |
 | **Shared Kernel Command Either Bus** | 1.0.0 | Command interfaces |
 
 ### Test Dependencies
 
 | Dependency | Version | Purpose |
 |------------|---------|---------|
-| **JUnit Jupiter** | 5.11.3 | Testing framework |
-| **Mockito** | 5.14.2 | Mocking framework |
-| **AssertJ** | 3.26.3 | Fluent assertions |
+| **JUnit Jupiter** | 6.0.2 | Testing framework |
+| **Mockito** | 5.21.0 | Mocking framework |
+| **AssertJ** | 3.27.6 | Fluent assertions |
 
 ## 🤝 Contributing
 
