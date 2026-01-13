@@ -123,20 +123,21 @@ class RegistryTest {
     }
 
     @Test
-    @DisplayName("should return null when no handler registered for command type")
-    void shouldReturnNullWhenNoHandlerRegisteredForCommandType() {
+    @DisplayName("should throw IllegalArgumentException when no handler registered for command type")
+    void shouldThrowIllegalArgumentExceptionWhenNoHandlerRegisteredForCommandType() {
         // given
         setupWithoutHandlers();
         registry = new Registry(applicationContext);
 
         // when & then
         assertThatThrownBy(() -> registry.get(TestCommand.class))
-            .isInstanceOf(NullPointerException.class);
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessageContaining("No command handler registered for:");
     }
 
     @Test
-    @DisplayName("should handle empty application context")
-    void shouldHandleEmptyApplicationContext() {
+    @DisplayName("should throw IllegalArgumentException for any command type when application context is empty")
+    void shouldThrowIllegalArgumentExceptionWhenApplicationContextIsEmpty() {
         // given
         setupWithoutHandlers();
 
@@ -145,9 +146,11 @@ class RegistryTest {
 
         // then
         assertThatThrownBy(() -> registry.get(TestCommand.class))
-            .isInstanceOf(NullPointerException.class);
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessageContaining("No command handler registered for:");
         assertThatThrownBy(() -> registry.get(AnotherTestCommand.class))
-            .isInstanceOf(NullPointerException.class);
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessageContaining("No command handler registered for:");
     }
 
     @Test
